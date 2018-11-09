@@ -1,10 +1,19 @@
 Setup steps:
 0. Have a tenant in the partner with an Azure subscription. The subscription should have a role assignment for "Foreign Principal"
-1. Create an application in the partner directory
+1. Create an application in the partner directory with url of http://localhost
 2. Change it to multitenant
 3. Go into its manifest and change the requiredResourceAccess to:
 ```
   "requiredResourceAccess": [
+    {
+      "resourceAppId": "797f4846-ba00-4fd7-ba43-dac1f8f63013",
+      "resourceAccess": [
+        {
+          "id": "41094075-9dad-400e-a0bd-54e686782033",
+          "type": "Scope"
+        }
+      ]
+    },
     {
       "resourceAppId": "00000003-0000-0000-c000-000000000000",
       "resourceAccess": [
@@ -44,5 +53,21 @@ Setup steps:
 4. Grant permissions to the app in the partner directory
 5. Pre-consent the app's service principal: https://blogs.msdn.microsoft.com/iwilliams/2017/12/01/cloud-solution-provider-pre-consent/
 6. Create a key for the application, place it in PartnerTest/App.Config: `BootstrapAppSecret`
+7. Get a refresh token for the application, place it in PartnerTest/App.Config: `RefreshToken`
+	a. First get an authcode using: https://login.microsoftonline.com/common/OAuth2/Authorize?client_id=<applicationid>&prompt=admin_consent&redirect_uri=http://localhost&response_mode=query&response_type=code
+	b. Take the code from the url, and make the following HTTP request. THe response will have the `refresh_token`
+```
+POST https://login.microsoftonline.com/common/oauth2/token
+Headers:
+Content-Type:application/x-www-form-urlencoded
+
+Body:
+grant_type:authorization_code
+code:<authcode>
+client_id:<applicationId>
+redirect_uri:http://localhost
+client_secret:<applicationSecret>
+resource:https://management.azure.com/
+```
 7. Put the application id, subscription id, tenant directory id in PartnerTest/Program.cs
-8. Run the console application, observe the error `The identity of the calling application could not be established.`
+8. Run the console application, it will list the service principals and resource groups
