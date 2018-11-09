@@ -54,8 +54,8 @@ Setup steps:
 5. Pre-consent the app's service principal: https://blogs.msdn.microsoft.com/iwilliams/2017/12/01/cloud-solution-provider-pre-consent/
 6. Create a key for the application, place it in PartnerTest/App.Config: `BootstrapAppSecret`
 7. Get a refresh token for the application, place it in PartnerTest/App.Config: `RefreshToken`
-	a. First get an authcode using: https://login.microsoftonline.com/common/OAuth2/Authorize?client_id=<applicationid>&prompt=admin_consent&redirect_uri=http://localhost&response_mode=query&response_type=code
-	b. Take the code from the url, and make the following HTTP request. THe response will have the `refresh_token`
+	1. First get an authcode using: https://login.microsoftonline.com/common/OAuth2/Authorize?client_id=<applicationid>&prompt=admin_consent&redirect_uri=http://localhost&response_mode=query&response_type=code
+	2. Take the code from the url, and make the following HTTP request. THe response will have the `refresh_token`
 ```
 POST https://login.microsoftonline.com/common/oauth2/token
 Headers:
